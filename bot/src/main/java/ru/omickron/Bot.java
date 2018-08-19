@@ -11,10 +11,9 @@ import java.util.stream.Collectors;
 import lombok.AllArgsConstructor;
 import lombok.NonNull;
 import lombok.SneakyThrows;
-import ru.omickron.action.CleanupDirectoryAction;
+import ru.omickron.action.CleanupStatementFilesAction;
 import ru.omickron.action.GetCodeAction;
 import ru.omickron.action.GroupPhotosToStatementsAction;
-import ru.omickron.action.MarkStatementAsProcessedAction;
 import ru.omickron.action.SendStatementAction;
 
 @AllArgsConstructor
@@ -43,11 +42,8 @@ public class Bot {
 
         GetCodeAction getCodeAction = new GetCodeAction( config );
         SendStatementAction sendStatementAction = new SendStatementAction( getCodeAction );
-        MarkStatementAsProcessedAction markStatementAsProcessedAction = new MarkStatementAsProcessedAction();
-        statements.stream().map( sendStatementAction :: call ).forEach( markStatementAsProcessedAction :: mark );
-
-        CleanupDirectoryAction cleanupDirectoryAction = new CleanupDirectoryAction();
-        cleanupDirectoryAction.cleanup( config );
+        CleanupStatementFilesAction cleanupStatementFilesAction = new CleanupStatementFilesAction();
+        statements.stream().map( sendStatementAction :: call ).forEach( cleanupStatementFilesAction :: cleanup );
     }
 
     @NonNull

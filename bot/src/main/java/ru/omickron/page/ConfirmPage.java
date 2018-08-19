@@ -18,6 +18,8 @@ public class ConfirmPage extends PageObject {
     private WebElement correctCheckBox;
     @FindBy(id = "form-submit")
     private WebElement submitButton;
+    @FindBy(id = "message")
+    private WebElement mailConfirmedMessage;
 
     public ConfirmPage( @NonNull WebDriver webDriver ) {
         super( webDriver );
@@ -31,6 +33,8 @@ public class ConfirmPage extends PageObject {
     public void sendStatement( @NonNull String code ) {
         confirmCodeInput.sendKeys( code );
         confirmCodeInputButton.click();
+        new WebDriverWait( getWebDriver(), 10 ).until(
+                webDriver -> mailConfirmedMessage.getText().equals( "Почта подтверждена!" ) );
         correctCheckBox.click();
         submitButton.click();
     }
