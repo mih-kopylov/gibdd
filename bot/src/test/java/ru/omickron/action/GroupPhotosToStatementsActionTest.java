@@ -1,4 +1,4 @@
-package ru.omickron;
+package ru.omickron.action;
 
 import com.google.common.collect.ImmutableList;
 import java.nio.file.Path;
@@ -7,6 +7,7 @@ import java.time.LocalDateTime;
 import java.util.List;
 import lombok.NonNull;
 import org.junit.Test;
+import ru.omickron.Statement;
 
 import static org.hamcrest.Matchers.equalTo;
 import static org.hamcrest.Matchers.hasSize;

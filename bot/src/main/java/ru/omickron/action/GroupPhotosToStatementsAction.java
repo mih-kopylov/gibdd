@@ -1,4 +1,4 @@
-package ru.omickron;
+package ru.omickron.action;
 
 import java.nio.file.Path;
 import java.time.LocalDateTime;
@@ -11,6 +11,7 @@ import java.util.Map;
 import java.util.Set;
 import java.util.stream.Collectors;
 import lombok.NonNull;
+import ru.omickron.Statement;
 
 public class GroupPhotosToStatementsAction {
     private static final int ACCURACY = 2;

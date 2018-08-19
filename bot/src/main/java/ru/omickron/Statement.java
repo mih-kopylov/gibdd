@@ -13,6 +13,7 @@ import lombok.ToString;
 @Setter
 @ToString
 public class Statement {
+    private boolean processed;
     @NonNull
     private String number;
     @NonNull

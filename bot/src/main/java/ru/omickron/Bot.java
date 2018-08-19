@@ -11,6 +11,11 @@ import java.util.stream.Collectors;
 import lombok.AllArgsConstructor;
 import lombok.NonNull;
 import lombok.SneakyThrows;
+import ru.omickron.action.CleanupDirectoryAction;
+import ru.omickron.action.GetCodeAction;
+import ru.omickron.action.GroupPhotosToStatementsAction;
+import ru.omickron.action.MarkStatementAsProcessedAction;
+import ru.omickron.action.SendStatementAction;
 
 @AllArgsConstructor
 public class Bot {
@@ -36,7 +41,13 @@ public class Bot {
                         .thenComparing( Statement :: getTime ) )
                 .forEach( System.out :: println );
 
+        GetCodeAction getCodeAction = new GetCodeAction( config );
+        SendStatementAction sendStatementAction = new SendStatementAction( getCodeAction );
+        MarkStatementAsProcessedAction markStatementAsProcessedAction = new MarkStatementAsProcessedAction();
+        statements.stream().map( sendStatementAction :: call ).forEach( markStatementAsProcessedAction :: mark );
 
+        CleanupDirectoryAction cleanupDirectoryAction = new CleanupDirectoryAction();
+        cleanupDirectoryAction.cleanup( config );
     }
 
     @NonNull
