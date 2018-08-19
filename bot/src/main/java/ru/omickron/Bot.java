@@ -4,16 +4,14 @@ import java.io.FileNotFoundException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.util.Collection;
 import java.util.Comparator;
 import java.util.List;
-import java.util.stream.Collectors;
 import lombok.AllArgsConstructor;
 import lombok.NonNull;
 import lombok.SneakyThrows;
 import ru.omickron.action.CleanupStatementFilesAction;
 import ru.omickron.action.GetCodeAction;
-import ru.omickron.action.GroupPhotosToStatementsAction;
+import ru.omickron.action.ReadStatementsFromDirectoryAction;
 import ru.omickron.action.SendStatementAction;
 
 @AllArgsConstructor
@@ -27,12 +25,8 @@ public class Bot {
         if (!Files.exists( path )) {
             throw new FileNotFoundException( String.format( "Directory '%s' does not exist", path ) );
         }
-        List<Statement> statements = Files.walk( path )
-                .filter( o -> !o.equals( path ) )
-                .filter( Files :: isDirectory )
-                .map( this :: readStatementsFromDirectory )
-                .flatMap( Collection :: stream )
-                .collect( Collectors.toList() );
+        ReadStatementsFromDirectoryAction readStatementsFromDirectoryAction = new ReadStatementsFromDirectoryAction();
+        List<Statement> statements = readStatementsFromDirectoryAction.read( path );
 
         statements.stream()
                 .sorted( Comparator.comparing( Statement :: getNumber )
@@ -44,16 +38,5 @@ public class Bot {
         SendStatementAction sendStatementAction = new SendStatementAction( getCodeAction );
         CleanupStatementFilesAction cleanupStatementFilesAction = new CleanupStatementFilesAction();
         statements.stream().map( sendStatementAction :: call ).forEach( cleanupStatementFilesAction :: cleanup );
-    }
-
-    @NonNull
-    @SneakyThrows
-    private List<Statement> readStatementsFromDirectory( @NonNull Path path ) {
-        List<Path> photos = Files.walk( path ).filter( this :: isPhotoFile ).collect( Collectors.toList() );
-        return new GroupPhotosToStatementsAction().call( photos );
-    }
-
-    private boolean isPhotoFile( @NonNull Path path ) {
-        return path.toString().toLowerCase().endsWith( ".jpg" );
     }
 }
