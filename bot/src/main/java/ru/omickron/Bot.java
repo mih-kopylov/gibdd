@@ -4,8 +4,7 @@ import java.io.FileNotFoundException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.util.Comparator;
-import java.util.List;
+import java.util.Set;
 import lombok.AllArgsConstructor;
 import lombok.NonNull;
 import lombok.SneakyThrows;
@@ -26,13 +25,7 @@ public class Bot {
             throw new FileNotFoundException( String.format( "Directory '%s' does not exist", path ) );
         }
         ReadStatementsFromDirectoryAction readStatementsFromDirectoryAction = new ReadStatementsFromDirectoryAction();
-        List<Statement> statements = readStatementsFromDirectoryAction.read( path );
-
-        statements.stream()
-                .sorted( Comparator.comparing( Statement :: getNumber )
-                        .thenComparing( Statement :: getAddress )
-                        .thenComparing( Statement :: getTime ) )
-                .forEach( System.out :: println );
+        Set<Statement> statements = readStatementsFromDirectoryAction.read( path );
 
         GetCodeAction getCodeAction = new GetCodeAction( config );
         SendStatementAction sendStatementAction = new SendStatementAction( getCodeAction );
