@@ -13,4 +13,6 @@ public class Config {
     private String mailLogin;
     @Parameter(names = "-password", description = "Email password", required = true)
     private String mailPassword;
+    @Parameter(names = "-count", description = "Statements count to process")
+    private Integer count;
 }
