@@ -17,6 +17,7 @@ import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.FindBy;
 import org.openqa.selenium.support.ui.WebDriverWait;
+import ru.omickron.Config;
 import ru.omickron.Statement;
 
 public class StatementPage extends PageObject {
@@ -45,14 +46,14 @@ public class StatementPage extends PageObject {
 
     @SneakyThrows
     @NonNull
-    public ConfirmPage fillWithStatement( @NonNull Statement statement ) {
+    public ConfirmPage fillWithStatement( @NonNull Config config, @NonNull Statement statement ) {
         fillDropdown( 0, "78" );
         new WebDriverWait( getWebDriver(), 5 ).until( this :: subunitValuesUpdated );
         fillDropdown( 1, "Лен" );
 
-        surname.sendKeys( "Копылов" );
-        firstname.sendKeys( "Михаил" );
-        email.sendKeys( "mih.kopylov@yandex.ru" );
+        surname.sendKeys( config.getLastName() );
+        firstname.sendKeys( config.getFirstName() );
+        email.sendKeys( config.getMailLogin() + "@yandex.ru" );
         message.sendKeys( getMessage( statement ) );
 
         uploadPhotos( statement.getPhotos() );

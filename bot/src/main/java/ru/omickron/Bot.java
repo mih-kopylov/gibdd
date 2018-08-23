@@ -29,7 +29,7 @@ public class Bot {
         }
 
         GetCodeAction getCodeAction = new GetCodeAction( config );
-        SendStatementAction sendStatementAction = new SendStatementAction( getCodeAction );
+        SendStatementAction sendStatementAction = new SendStatementAction( config, getCodeAction );
         CleanupStatementFilesAction cleanupStatementFilesAction = new CleanupStatementFilesAction();
         ReadStatementsFromDirectoryAction readStatementsFromDirectoryAction = new ReadStatementsFromDirectoryAction();
         Set<Statement> statements = readStatementsFromDirectoryAction.read( path );
@@ -37,6 +37,6 @@ public class Bot {
         if (nonNull( config.getCount() )) {
             statementStream = statementStream.limit( config.getCount() );
         }
-        statementStream.map( sendStatementAction :: call ).forEach( cleanupStatementFilesAction :: cleanup );
+        statementStream.map( sendStatementAction :: send ).forEach( cleanupStatementFilesAction :: cleanup );
     }
 }
