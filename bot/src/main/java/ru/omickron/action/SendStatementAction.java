@@ -1,5 +1,6 @@
 package ru.omickron.action;
 
+import io.github.bonigarcia.wdm.WebDriverManager;
 import java.util.concurrent.TimeUnit;
 import lombok.AllArgsConstructor;
 import lombok.NonNull;
@@ -21,6 +22,7 @@ public class SendStatementAction {
 
     @NonNull
     public Statement send( @NonNull Statement statement ) {
+        WebDriverManager.chromedriver().targetPath( "~/webdriver" ).setup();
         WebDriver driver = new ChromeDriver();
         driver.manage().timeouts().implicitlyWait( 10, TimeUnit.SECONDS );
 
