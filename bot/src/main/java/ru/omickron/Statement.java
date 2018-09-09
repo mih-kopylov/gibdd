@@ -13,7 +13,6 @@ import lombok.ToString;
 @Getter
 @Setter
 @ToString
-
 public class Statement implements Comparable<Statement> {
     @NonNull
     private String number;

@@ -11,6 +11,7 @@ import java.util.List;
 import java.util.concurrent.TimeUnit;
 import lombok.NonNull;
 import lombok.SneakyThrows;
+import lombok.extern.slf4j.Slf4j;
 import org.openqa.selenium.JavascriptExecutor;
 import org.openqa.selenium.Keys;
 import org.openqa.selenium.WebDriver;
@@ -20,6 +21,7 @@ import org.openqa.selenium.support.ui.WebDriverWait;
 import ru.omickron.Config;
 import ru.omickron.Statement;
 
+@Slf4j
 public class StatementPage extends PageObject {
     @FindBy(css = ".select2-selection.select2-selection--single")
     private List<WebElement> dropdowns;
@@ -68,6 +70,7 @@ public class StatementPage extends PageObject {
     @SneakyThrows
     private void uploadPhotos( @NonNull Collection<Path> photos ) {
         for (Path photo : photos) {
+            log.info( "Uploading photo {}", photo );
             TimeUnit.SECONDS.sleep( 1 );
             Toolkit.getDefaultToolkit()
                     .getSystemClipboard()
