@@ -7,11 +7,11 @@
     <parent>
         <groupId>ru.omickron</groupId>
         <artifactId>gibdd</artifactId>
-        <version>1.0.2-SNAPSHOT</version>
+        <version>1.0.2</version>
     </parent>
 
     <artifactId>bot</artifactId>
-    <version>1.0.2-SNAPSHOT</version>
+    <version>1.0.2</version>
     <packaging>jar</packaging>
 
     <dependencies>
