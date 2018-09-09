@@ -15,9 +15,11 @@ import javax.mail.internet.InternetAddress;
 import lombok.AllArgsConstructor;
 import lombok.NonNull;
 import lombok.SneakyThrows;
+import lombok.extern.slf4j.Slf4j;
 import ru.omickron.Config;
 
 @AllArgsConstructor
+@Slf4j
 public class GetCodeAction {
     private static final String CODE_REGEXP = ">([А-Я0-9]{5})<";
     private static final String CHECK_CODE_SENDER_EMAIL = "appeal@noreply.mvd.ru";
@@ -31,6 +33,7 @@ public class GetCodeAction {
     public String getCode() {
         int tryNumber = 0;
         while (true) {
+            log.info( "Trying to get verification code. tryNumber={}", tryNumber );
             tryNumber++;
             Session session = Session.getDefaultInstance( new Properties() );
             Store store = session.getStore( "imaps" );
@@ -39,14 +42,17 @@ public class GetCodeAction {
                 Folder folder = store.getFolder( "INBOX" );
                 folder.open( Folder.READ_WRITE );
                 try {
+                    log.info( "Connection to IMAPS succeed. Looking for a message" );
                     Optional<Message> messageOptional =
                             Arrays.stream( folder.getMessages() ).filter( this :: isConfirmationMessage ).findAny();
                     if (messageOptional.isPresent()) {
                         Message message = messageOptional.get();
                         String code = getCode( message );
                         message.setFlag( Flags.Flag.DELETED, true );
+                        log.info( "Message has been found. Code {}", code );
                         return code;
                     }
+                    log.info( "Message not found" );
                 } finally {
                     folder.close( true );
                 }
