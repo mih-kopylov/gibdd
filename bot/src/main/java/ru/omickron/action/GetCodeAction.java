@@ -25,6 +25,7 @@ public class GetCodeAction {
     private static final String CHECK_CODE_SENDER_EMAIL = "appeal@noreply.mvd.ru";
     private static final String CHECK_CODE_SUBJECT = "Проверка почты";
     private static final int MAX_TRIES = 20;
+    private static final int TIMEOUT = 5000;
     @NonNull
     private final Config config;
 
@@ -35,14 +36,14 @@ public class GetCodeAction {
         while (true) {
             log.info( "Trying to get verification code. tryNumber={}", tryNumber );
             tryNumber++;
-            Session session = Session.getDefaultInstance( new Properties() );
+            Session session = Session.getDefaultInstance( getImapProperties() );
             Store store = session.getStore( "imaps" );
-            store.connect( config.getImapHost(), 993, config.getMailLogin(), config.getMailPassword() );
             try {
+                store.connect( config.getImapHost(), 993, config.getMailLogin(), config.getMailPassword() );
                 Folder folder = store.getFolder( "INBOX" );
                 folder.open( Folder.READ_WRITE );
                 try {
-                    log.info( "Connection to IMAPS succeed. Looking for a message" );
+                    log.info( "Connection to {} succeed. Looking for a message", config.getImapHost() );
                     Optional<Message> messageOptional =
                             Arrays.stream( folder.getMessages() ).filter( this :: isConfirmationMessage ).findAny();
                     if (messageOptional.isPresent()) {
@@ -56,6 +57,8 @@ public class GetCodeAction {
                 } finally {
                     folder.close( true );
                 }
+            } catch (Exception e) {
+                log.error( String.format( "Exception while connecting to %s", config ), e );
             } finally {
                 store.close();
             }
@@ -64,6 +67,13 @@ public class GetCodeAction {
             }
             TimeUnit.SECONDS.sleep( 1 );
         }
+    }
+
+    private Properties getImapProperties() {
+        Properties result = new Properties();
+        result.setProperty( "mail.imaps.connectiontimeout", String.valueOf( TIMEOUT ) );
+        result.setProperty( "mail.imaps.timeout", String.valueOf( TIMEOUT ) );
+        return result;
     }
 
     @NonNull
