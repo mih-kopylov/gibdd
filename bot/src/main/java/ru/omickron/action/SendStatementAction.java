@@ -1,12 +1,9 @@
 package ru.omickron.action;
 
-import io.github.bonigarcia.wdm.WebDriverManager;
-import java.util.concurrent.TimeUnit;
 import lombok.AllArgsConstructor;
 import lombok.NonNull;
 import lombok.extern.slf4j.Slf4j;
 import org.openqa.selenium.WebDriver;
-import org.openqa.selenium.chrome.ChromeDriver;
 import ru.omickron.Config;
 import ru.omickron.Statement;
 import ru.omickron.page.ConfirmPage;
@@ -23,11 +20,8 @@ public class SendStatementAction {
     private final GetCodeAction getCodeAction;
 
     @NonNull
-    public Statement send( @NonNull Statement statement ) {
+    public Statement send( @NonNull WebDriver driver, @NonNull Statement statement ) {
         log.info( "Processng statement {}", statement );
-        WebDriverManager.chromedriver().targetPath( "~/webdriver" ).setup();
-        WebDriver driver = new ChromeDriver();
-        driver.manage().timeouts().implicitlyWait( 10, TimeUnit.SECONDS );
 
         driver.get( GIBDD_URL );
         InitPage initPage = new InitPage( driver );
@@ -37,7 +31,6 @@ public class SendStatementAction {
         String code = getCodeAction.getCode();
         confirmPage.sendStatement( code );
 
-        driver.close();
         return statement;
     }
 }
