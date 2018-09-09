@@ -6,7 +6,7 @@
 
     <groupId>ru.omickron</groupId>
     <artifactId>gibdd</artifactId>
-    <version>1.0-SNAPSHOT</version>
+    <version>1.0.1-SNAPSHOT</version>
     <packaging>pom</packaging>
 
     <modules>
@@ -110,6 +110,14 @@
                 </plugin>
             </plugins>
         </pluginManagement>
+
+        <plugins>
+            <plugin>
+                <groupId>ru.omickron</groupId>
+                <artifactId>versioner-maven-plugin</artifactId>
+                <version>1.0.0</version>
+            </plugin>
+        </plugins>
     </build>
 
 
